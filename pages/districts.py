@@ -62,12 +62,12 @@ st.markdown(f"""
             font-size: 20px;
             font-family: Georgia, serif;
         }}
-        .rounded-panel {{
-            background-color: #ececec;
-            padding: 30px;
-            border-radius: 25px;
-            font-family: Georgia, serif;
-        }}
+        # .rounded-panel {{
+        #     background-color: #ececec;
+        #     padding: 30px;
+        #     border-radius: 25px;
+        #     font-family: Georgia, serif;
+        # }}
         .yellow-btn > button {{
             background-color: #ffdd57;
             color: black;

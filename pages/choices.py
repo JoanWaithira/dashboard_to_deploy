@@ -62,12 +62,12 @@ st.markdown(f"""
         }}
 
         /* Panel Styling */
-        .panel {{
-            background-color: #ececec;
-            padding: 30px;
-            border-radius: 25px;
-            font-family: Georgia, serif;
-        }}
+        # .panel {{
+        #     background-color: #ececec;
+        #     padding: 30px;
+        #     border-radius: 25px;
+        #     font-family: Georgia, serif;
+        # }}
 
         /* Yellow buttons */
         .yellow-btn > button {{
