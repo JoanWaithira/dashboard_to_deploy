@@ -116,44 +116,42 @@ with col1:
 with col2:
     st.subheader("Select Your District")
 
-    # Build interactive folium map
-    m = Map(location=[52.516, 6.1], zoom_start=12)
-    feature_group = FeatureGroup(name="Districts")
+    with st.container():  # keeps map + controls visually grouped
+        m = Map(location=[52.516, 6.1], zoom_start=12)
+        feature_group = FeatureGroup(name="Districts")
 
-    for _, row in districts.iterrows():
-        name = row[district_name_column]
-        gj = GeoJson(
-            data=row.geometry.__geo_interface__,
-            name=name,
-            tooltip=name,
-            popup=name,
-        )
-        feature_group.add_child(gj)
+        for _, row in districts.iterrows():
+            name = row[district_name_column]
+            gj = GeoJson(
+                data=row.geometry.__geo_interface__,
+                name=name,
+                tooltip=name,
+                popup=name,
+            )
+            feature_group.add_child(gj)
 
-    m.add_child(feature_group)
+        m.add_child(feature_group)
+        map_output = streamlit_folium.st_folium(m, width=650, height=600)
 
-    map_output = streamlit_folium.st_folium(m, width=500, height=450)
+        # Click handling + buttons
+        if map_output and "last_object_clicked" in map_output and map_output["last_object_clicked"]:
+            lat, lon = map_output["last_object_clicked"]["lat"], map_output["last_object_clicked"]["lng"]
+            clicked_point = Point(lon, lat)
+            matched = districts[districts.contains(clicked_point)]
 
-    # Handle click event
-    if map_output and "last_object_clicked" in map_output and map_output["last_object_clicked"]:
-        lat, lon = map_output["last_object_clicked"]["lat"], map_output["last_object_clicked"]["lng"]
-        clicked_point = Point(lon, lat)
-        matched = districts[districts.contains(clicked_point)]
+            if not matched.empty:
+                selected_district = matched.iloc[0][district_name_column]
+                st.session_state["selected_district"] = selected_district
+                st.success(f"Selected district: **{selected_district}**")
+            else:
+                st.session_state["selected_district"] = None
+                st.warning("No matching district found!")
 
-        if not matched.empty:
-            selected_district = matched.iloc[0][district_name_column]
-            st.session_state["selected_district"] = selected_district
-            st.success(f"Selected district: **{selected_district}**")
-        else:
-            st.session_state["selected_district"] = None
-            st.warning("No matching district found!")
+        if "selected_district" in st.session_state and st.session_state["selected_district"]:
+            if st.button("Explore Solar Potential"):
+                st.switch_page("pages/districts.py")
 
-    # Auto → Manual fallback
-    if "selected_district" in st.session_state and st.session_state["selected_district"]:
-        if st.button("Explore Solar Potential"):
+        selected = st.selectbox("Or pick a district manually:", districts[district_name_column].sort_values())
+        if st.button("Explore Solar Potential (Manual)"):
+            st.session_state["selected_district"] = selected
             st.switch_page("pages/districts.py")
-
-    selected = st.selectbox("Or pick a district manually:", districts[district_name_column].sort_values())
-    if st.button("Explore Solar Potential (Manual)"):
-        st.session_state["selected_district"] = selected
-        st.switch_page("pages/districts.py")
