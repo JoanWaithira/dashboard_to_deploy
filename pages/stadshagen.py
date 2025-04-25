@@ -56,7 +56,7 @@ with col1:
 
 with col2:
     # Load and filter shapefile
-    gdf = gpd.read_file("data/zwolle_districts.shp").to_crs(epsg=4326)
+    gdf = gpd.read_file("assets/Wijkgrenzen_Zwolle.shp").to_crs(epsg=4326)
     gdf = gdf[gdf['OMSCHR'].str.contains("Stadshagen", case=False)]
 
     # Create zoomed-in map
