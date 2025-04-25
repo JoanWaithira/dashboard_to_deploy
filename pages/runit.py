@@ -122,10 +122,13 @@ components.html(open("fig_investment_only.html", 'r').read(), height=360, scroll
 
 # --- Action Buttons ---
 st.markdown("### ")
-col_btn1, col_btn2 = st.columns([1, 1])
+col_btn1, col_btn2, col_btn3 = st.columns([1, 1, 1])
 with col_btn1:
     if st.button("⬅ CHOOSE ANOTHER SCENARIO"):
-        st.switch_page("pages/2_ScenarioSelection.py")
+        st.switch_page("pages/simulation.py")
 with col_btn2:
     if st.button("📥 DOWNLOAD THE RESULTS"):
         st.success("Results will download soon...")
+with col_btn3:
+    if st.button("📊 GO BACK HOME"):
+        st.switch_page("Home.py")
